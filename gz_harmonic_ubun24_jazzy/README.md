@@ -53,8 +53,8 @@ docker compose build
 
 ```bash
 #!/usr/bin/bash
-docker stop simulator_01
-docker rm simulator_01
+docker stop simulator_03
+docker rm simulator_03
 xhost +local:root
 docker run -it --network='host' \
 -p 80:80 \
@@ -64,10 +64,10 @@ docker run -it --network='host' \
 --env='XDG_RUNTIME_DIR=/run/user/${UID}' \
 --env='GZ_VERSION=harmonic' \
 --volume='/tmp/.X11-unix:/tmp/.X11-unix:rw' \
---name simulator_01 \
+--name simulator_03 \
 gz_harmonic_ubun24_jazzy:latest bash
-docker stop simulator_01
-docker rm simulator_01
+docker stop simulator_03
+docker rm simulator_03
 ```
 
 Container ထဲရောက်သောအခါ:
