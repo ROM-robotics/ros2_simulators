@@ -1,0 +1,23 @@
+services:
+  gz_fortress_humble:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USERNAME: mr_robot
+        USER_UID: 1000
+        USER_GID: 1000
+    image: gz_fortress_ubun22_humble:latest
+    container_name: gz_fortress_humble
+    stdin_open: true
+    tty: true
+    network_mode: host
+    user: mr_robot
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - LIBGL_ALWAYS_SOFTWARE=0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./ros2_ws:/home/mr_robot/ros2_ws
+    privileged: false
