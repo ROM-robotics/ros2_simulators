@@ -57,13 +57,17 @@ RUN apt-get update && apt-get install -y \
 RUN rosdep init && rosdep update
 
 # ── User: mr_robot ────────────────────────────────────────────────────────────
+# Ubuntu 24.04 base image တွင် UID/GID 1000 ကို 'ubuntu' user က သုံးနေသည်
+# ထို default user ကို ဖျက်ပြီး mr_robot ကို အသစ်ဖန်တီးသည်
 ARG USERNAME=mr_robot
 ARG USER_UID=1000
 ARG USER_GID=1000
 
-RUN groupadd --gid ${USER_GID} ${USERNAME} \
+RUN apt-get update && apt-get install -y sudo \
+    && userdel -r ubuntu 2>/dev/null || true \
+    && groupdel ubuntu 2>/dev/null || true \
+    && groupadd --gid ${USER_GID} ${USERNAME} \
     && useradd --uid ${USER_UID} --gid ${USER_GID} --create-home --shell /bin/bash ${USERNAME} \
-    && apt-get update && apt-get install -y sudo \
     && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
     && chmod 0440 /etc/sudoers.d/${USERNAME} \
     && rm -rf /var/lib/apt/lists/*
