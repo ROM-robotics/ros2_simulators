@@ -1,0 +1,16 @@
+#/usr/bin/bash 
+docker stop simulator_01 
+docker rm simulator_01 
+xhost +local:root 
+docker run -it --network='host' \
+-p 80:80 \
+-p 9090:9090 \
+--env='DISPLAY' \
+--env='QT_X11_NO_MITSHM=1' \
+--env='XDG_RUNTIME_DIR=/run/user/${UID}' \
+--volume='/tmp/.X11-unix:/tmp/.X11-unix:rw' \
+--volume='/home/mr_robot/Desktop/Git/reeman_clone/src:/home/mr_robot/ros2_ws/src' \
+--name simulator_01 \
+romrobotics/gz_fortress_ubun22_humble:reeman_clone bash
+docker stop simulator_01 
+docker rm simulator_01
