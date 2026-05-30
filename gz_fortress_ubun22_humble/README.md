@@ -60,7 +60,7 @@ docker run -it --network='host' \
 --env='XDG_RUNTIME_DIR=/run/user/${UID}' \
 --volume='/tmp/.X11-unix:/tmp/.X11-unix:rw' \
 --name simulator_01 \
-gz_fortress_ubun22_humble:latest bash
+gz_fortress_ubun22_humble:base bash
 docker stop simulator_01 
 docker rm simulator_01
 ```
