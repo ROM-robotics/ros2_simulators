@@ -1,0 +1,29 @@
+# ./.tmuxinator.yml
+
+name: ROM Dynamics 
+root: ~/
+
+pre_window: export PS1=" \[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;45m\]>>>\[$(tput sgr0)\] \[$(tput sgr0)\]"
+
+# USE ROM_ROBOT_MODEL as ( bobo | yoyo | rom2109 ) in BASHRC
+
+startup_window: Main
+# startup_pane: 0
+
+windows:
+  - Main: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; ros2 launch reeman_clone_description sim.launch.py
+  - SubscriberLists: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; sleep 10; ros2 topic subscribers_list
+  - PublisherLists: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; sleep 10; ros2 topic publishers_list
+  - DanglerOrphans: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; sleep 10; ros2 topic leaf_topics_list

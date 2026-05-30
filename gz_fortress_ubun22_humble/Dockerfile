@@ -31,6 +31,9 @@ RUN apt-get update && apt-get install -y \
     python3-colcon-common-extensions \
     python3-rosdep \
     python3-vcstool \
+    tmux \
+    tmuxinator \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Gazebo Fortress (ignition-fortress) ──────────────────────────────────────
@@ -64,10 +67,31 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} \
     && chmod 0440 /etc/sudoers.d/${USERNAME} \
     && rm -rf /var/lib/apt/lists/*
 
+COPY --chown=${USERNAME}:${USERNAME} tmux/.tmux.conf \
+     /home/${USERNAME}/.tmux.conf
+    
+COPY --chown=${USERNAME}:${USERNAME} tmux/.tmuxinator.yml \
+     /home/${USERNAME}/.tmuxinator.yml
+
+
+# ── Build ros2_cli_ws (custom ros2cli with topic subscribers list) ────────────
+USER ${USERNAME}
+RUN mkdir -p /home/${USERNAME}/ros2_cli_ws/src \
+    && git clone -b humble-distro/feature-topic-subscribers-list \
+        https://github.com/ROM-robotics/ros2cli.git \
+        /home/${USERNAME}/ros2_cli_ws/src/ros2cli \
+    && cd /home/${USERNAME}/ros2_cli_ws \
+    && . /opt/ros/humble/setup.sh \
+    && colcon build
+USER root
+
+
 # ── Environment setup (mr_robot) ──────────────────────────────────────────────
 RUN echo "source /opt/ros/humble/setup.bash" >> /home/${USERNAME}/.bashrc \
+    && echo "source /home/${USERNAME}/ros2_cli_ws/install/setup.bash" >> /home/${USERNAME}/.bashrc \
     && echo "export IGN_GAZEBO_RESOURCE_PATH=/usr/share/ignition" >> /home/${USERNAME}/.bashrc \
     && echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \
+    && echo "source /home/${USERNAME}/ros2_cli_ws/install/setup.bash" >> /root/.bashrc \
     && echo "export IGN_GAZEBO_RESOURCE_PATH=/usr/share/ignition" >> /root/.bashrc
 
 # ── Workspace ─────────────────────────────────────────────────────────────────
