@@ -7,7 +7,7 @@ services:
         USERNAME: mr_robot
         USER_UID: 1000
         USER_GID: 1000
-    image: gz_fortress_ubun22_humble:base
+    image: romrobotics/gz_fortress_ubun22_humble:base
     container_name: gz_fortress_humble
     stdin_open: true
     tty: true
